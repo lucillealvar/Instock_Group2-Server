@@ -1,12 +1,14 @@
-const express = require('express');
-const cors = require('cors');
-const dotenv = require('dotenv');
-const inventoryRoute = ('./Server/routes/Inventory/inventoryRoutes.js');
-const warehouseRoute = ('./Server/routes/Warehouse/warehouseRoutes.js');
-
-dotenv.config(); // Load environment variables
+const express = require("express");
 const app = express();
-const port = process.env.PORT || 3000;
+const dotenv = require("dotenv").config();
+const cors = require("cors");
+
+// route imports
+const inventoryRoute = require("./Server/routes/Inventory/inventoryRoutes");
+const warehouseRoute = require("./Server/routes/Warehouse/warehouseRoutes");
+
+// load environment variables
+const PORT = process.env.PORT || 3000;
 
 //middleware CORS
 app.use(cors());
@@ -15,9 +17,13 @@ app.use(cors());
 app.use(express.json());
 
 //routes
-app.use('/inventory', inventoryRoute);
-app.use('/warehouse', warehouseRoute);
+app.use("/inventory", inventoryRoute);
+app.use("/warehouse", warehouseRoute);
 
-app.listen(port, () => {
-    console.log(`Server is running on port ${PORT}`);
-})
+// app.get("/", (req, res) => {
+//   res.send("this is the root route");
+// });
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
