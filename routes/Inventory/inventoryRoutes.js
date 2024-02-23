@@ -8,9 +8,38 @@ router.get("/", (req, res) => {
 });
 
 router.get("/allitems", (req, res) => {
+  knex("inventories")
+    // .select("*")
+    .select(
+      "inventories.id",
+      "warehouse.warehouse_name",
+      "inventories.item_name",
+      "inventories.description",
+      "inventories.category",
+      "inventories.status",
+      "inventories.quantity"
+    )
+    .innerJoin("warehouse", "warehouse_name", "=", "inventories.warehouse_name")
+    .from("inventories")
+    .then((data) => {
+      res.json(data);
+    })
+    .catch((error) => {
+      res.status(500).send("na-da");
+    });
+});
+
+router.get("/test1", (req, res) => {
   knex
-    .select("*")
-    // .select("item_name")
+    .select(
+      "inventories.id",
+      //   "warehouse.warehouse_name",
+      "inventories.item_name",
+      "inventories.description",
+      "inventories.category",
+      "inventories.status",
+      "inventories.quantity"
+    )
     .from("inventories")
     .then((data) => {
       res.json(data);
