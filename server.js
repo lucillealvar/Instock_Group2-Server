@@ -3,26 +3,47 @@ const app = express();
 const dotenv = require("dotenv").config();
 const cors = require("cors");
 
+const knex = require("knex")(require("./knexfile"));
+// const knex = require("knex")(require("<path is relative to import file>"));
+
 // route imports
-const inventoryRoute = require("./Server/routes/Inventory/inventoryRoutes");
-const warehouseRoute = require("./Server/routes/Warehouse/warehouseRoutes");
+const inventoryRoute = require("./routes/Inventory/inventoryRoutes");
+const warehouseRoute = require("./routes/Warehouse/warehouseRoutes");
 
 // load environment variables
 const PORT = process.env.PORT || 3000;
 
-//middleware CORS
+//middleware
 app.use(cors());
-
-//middleware to parse JSON requests
 app.use(express.json());
 
 //routes
 app.use("/inventory", inventoryRoute);
 app.use("/warehouse", warehouseRoute);
 
-// app.get("/", (req, res) => {
-//   res.send("this is the root route");
-// });
+//-------------------------------
+//test connetion routes
+app.get("/test1", (req, res) => {
+  res.send("THIS IS THE SERVER!!!");
+});
+
+app.get("/test2/:status", (req, res) => {
+  let checkstatus;
+  let stockstatus = req.params.status;
+
+  if (stockstatus === "instock") {
+    checkstatus = "In Stock";
+  } else if (stockstatus === "outofstock") {
+    checkstatus = "Out of Stock";
+  }
+  knex
+    .select("id", "warehouse_id", "item_name")
+    .from("inventories")
+    .where("status", checkstatus)
+    .then((data) => res.json(data))
+    .catch((error) => res.status(500).send("na-da!!!"));
+});
+//-------------------------------
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
