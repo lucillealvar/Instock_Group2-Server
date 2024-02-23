@@ -1,8 +1,22 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 
-router.get('/inventory', (req, res) => {
-    res.send('List of items');
-})
+const knex = require("knex")(require("../../knexfile"));
 
+router.get("/", (req, res) => {
+  res.send("@ inventory default route");
+});
+
+router.get("/allitems", (req, res) => {
+  knex
+    .select("*")
+    // .select("item_name")
+    .from("inventories")
+    .then((data) => {
+      res.json(data);
+    })
+    .catch((error) => {
+      res.status(500).send("na-da");
+    });
+});
 module.exports = router;
