@@ -4,6 +4,7 @@ const dotenv = require("dotenv").config();
 const cors = require("cors");
 
 const knex = require("knex")(require("./knexfile"));
+// const knex = require("knex")(require("<path is relative to import file>"));
 
 // route imports
 const inventoryRoute = require("./routes/Inventory/inventoryRoutes");
