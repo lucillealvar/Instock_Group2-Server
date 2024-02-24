@@ -7,33 +7,25 @@ router.get("/", (req, res) => {
   res.send("@ inventory default route");
 });
 
-router.get("/allitems", (req, res) => {
+router.get("/", (req, res) => {
+  // returns all Inventory objects, unfiltered
   knex("inventories")
-    // .select("*")
-    .select(
-      "inventories.id",
-      "warehouse.warehouse_name",
-      "inventories.item_name",
-      "inventories.description",
-      "inventories.category",
-      "inventories.status",
-      "inventories.quantity"
-    )
-    .innerJoin("warehouse", "warehouse_name", "=", "inventories.warehouse_name")
-    .from("inventories")
+    .select("*")
     .then((data) => {
-      res.json(data);
+      resres.status(200).json(data);
     })
     .catch((error) => {
       res.status(500).send("na-da");
     });
 });
 
-router.get("/test1", (req, res) => {
+router.get("/withwarehousenames", (req, res) => {
+  // return all Inventory object, replace inventory.warehouse_id
+  // with warehouses.warehouse_name
   knex
     .select(
       "inventories.id",
-      //   "warehouse.warehouse_name",
+      "warehouses.warehouse_name",
       "inventories.item_name",
       "inventories.description",
       "inventories.category",
@@ -41,11 +33,13 @@ router.get("/test1", (req, res) => {
       "inventories.quantity"
     )
     .from("inventories")
+    .join("warehouses", "inventories.warehouse_id", "warehouses.id")
     .then((data) => {
-      res.json(data);
+      res.status(200).json(data);
     })
     .catch((error) => {
       res.status(500).send("na-da");
     });
 });
+
 module.exports = router;
