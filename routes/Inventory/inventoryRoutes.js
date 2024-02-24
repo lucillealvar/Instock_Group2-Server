@@ -3,22 +3,6 @@ const router = express.Router();
 
 const knex = require("knex")(require("../../knexfile"));
 
-// router.get("/", (req, res) => {
-//   res.send("@ inventory default route");
-// });
-
-// router.get("api/simplyall", (req, res) => {
-//   // returns all Inventory objects, unfiltered
-//   knex("inventories")
-//     .select("*")
-//     .then((data) => {
-//       res.status(200).json(data);
-//     })
-//     .catch((error) => {
-//       res.status(500).send("na-da");
-//     });
-// });
-
 router.get("/", (req, res) => {
   // return all Inventory object, replace inventory.warehouse_id
   // with warehouses.warehouse_name
