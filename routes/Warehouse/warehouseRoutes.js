@@ -3,7 +3,7 @@ const router = express.Router();
 const knex = require("knex")(require("../../knexfile"));
 
 router.get("/", (req, res) => {
-  // fetch all warehouses from the database
+  // GET all warehouses (except timestamps)
   knex("warehouses")
     .select(
       "id",
@@ -24,6 +24,38 @@ router.get("/", (req, res) => {
       res
         .status(500)
         .json({ error: "Something went wrong. Please try again later" });
+    });
+});
+
+// GET inventories by warehouse ID
+router.get("/:id/inventories", (req, res) => {
+  const warehouseId = req.params.id;
+  knex("warehouses")
+    .select("id")
+    .where("id", warehouseId)
+    .then((warehouse) => {
+      if (warehouse.length === 0) {
+        res.status(404).json({ error: "Warehouse not found" });
+      } else {
+        knex("inventories")
+          .select(
+            "id",
+            "item_name",
+            "category",
+            "status",
+            "quantity"
+          )
+          .where("warehouse_id", warehouseId)
+          .then((inventories) => {
+            res.status(200).json(inventories);
+          })
+          .catch((error) => {
+            console.error(error);
+            res
+              .status(500)
+              .json({ error: "Something went wrong. Please try again later" });
+          });
+      }
     });
 });
 
