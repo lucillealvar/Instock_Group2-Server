@@ -18,8 +18,8 @@ app.use(cors());
 app.use(express.json());
 
 //routes
-app.use("/inventory", inventoryRoute);
-app.use("/warehouse", warehouseRoute);
+app.use("/api/inventories", inventoryRoute);
+app.use("/api/warehouses", warehouseRoute);
 
 //-------------------------------
 //test connetion routes
