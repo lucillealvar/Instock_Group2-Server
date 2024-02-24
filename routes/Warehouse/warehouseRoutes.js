@@ -29,10 +29,18 @@ router.get("/", (req, res) => {
 
 router.delete("/:deleteID", (req, res) => {
   let deleteID = req.params.deleteID;
-  res.send(`we are deleting warehouse: ${deleteID} `);
-  // res.status(204).send("warehouse successfully deleted");
+  // res.send(`we are deleting warehouse: ${deleteID} `);
 
-  // res.status(404).send("warehouse ID not found");
+  knex
+    .from("warehouses")
+    .where("warehouses.id", deleteID)
+    .del()
+    .then((data) => {
+      res.status(204).json("warehouse successfully deleted");
+    })
+    .catch((data) => {
+      res.status(404).send("warehouse ID not found");
+    });
 });
 
 module.exports = router;
