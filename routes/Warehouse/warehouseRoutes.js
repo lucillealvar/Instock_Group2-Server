@@ -2,8 +2,29 @@ const express = require("express");
 const router = express.Router();
 const knex = require("knex")(require("../../knexfile"));
 
+  // GET all warehouses (except timestamps)
 router.get("/", (req, res) => {
-  res.send("List of warehouse");
+  knex("warehouses")
+    .select(
+      "id",
+      "warehouse_name",
+      "address",
+      "city",
+      "country",
+      "contact_name",
+      "contact_position",
+      "contact_phone",
+      "contact_email"
+    )
+    .then((warehouses) => {
+      res.status(200).json(warehouses);
+    })
+    .catch((error) => {
+      console.error(error);
+      res
+        .status(500)
+        .json({ error: "Something went wrong. Please try again later" });
+    });
 });
 
 router.put("/:id", async (req, res) => {
@@ -63,6 +84,38 @@ router.put("/:id", async (req, res) => {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
   }
+});
+
+// GET inventories by warehouse ID
+router.get("/:id/inventories", (req, res) => {
+  const warehouseId = req.params.id;
+  knex("warehouses")
+    .select("id")
+    .where("id", warehouseId)
+    .then((warehouse) => {
+      if (warehouse.length === 0) {
+        res.status(404).json({ error: "Warehouse not found" });
+      } else {
+        knex("inventories")
+          .select(
+            "id",
+            "item_name",
+            "category",
+            "status",
+            "quantity"
+          )
+          .where("warehouse_id", warehouseId)
+          .then((inventories) => {
+            res.status(200).json(inventories);
+          })
+          .catch((error) => {
+            console.error(error);
+            res
+              .status(500)
+              .json({ error: "Something went wrong. Please try again later" });
+          });
+      }
+    });
 });
 
 module.exports = router;
