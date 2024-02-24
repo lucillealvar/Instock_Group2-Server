@@ -52,4 +52,37 @@ router.get("/:intventoyid", (req, res) => {
     });
 });
 
+
+router.put("/:id", async (req, res) => {
+  try {
+    const inventoryId = req.params.id;
+    const {
+      warehouse_id,
+      item_name,
+      description,
+      category,
+      status,
+      quantity
+    } = req.body;
+
+    // Check if all required properties exist
+    if (
+      !warehouse_id ||
+      !item_name ||
+      !description ||
+      !category ||
+      !status ||
+      !quantity ||
+    ) {
+      return res.status(400).json({ error: "Missing properties in the request body" });
+    }
+
+    // Check if warehouse_id exists in warehouses table
+    const warehouseExists = await knex("warehouses").where("id", warehouse_id).first();
+    if (!warehouseExists) {
+      return res.status(400).json({ error: "Warehouse ID does not exist" });
+    }
+  }
+});
+
 module.exports = router;
