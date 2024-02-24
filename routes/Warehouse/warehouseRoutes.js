@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const knex = require("knex")(require("../../knexfile"));
+const { validateWarehouseInput, validateMiddleware } = require("../../middleware/validationMiddleware");
 
 // GET all warehouses (except timestamps)
 router.get("/", (req, res) => {
@@ -27,6 +28,7 @@ router.get("/", (req, res) => {
     });
 });
 
+//PUT or EDIT a warehouse
 router.put("/:id", async (req, res) => {
   const { id } = req.params;
   const {
@@ -88,14 +90,18 @@ router.put("/:id", async (req, res) => {
 
 // GET inventories by warehouse ID
 router.get("/:id/inventories", (req, res) => {
+  //retrieve warehouse ID from request parameters
   const warehouseId = req.params.id;
+  //check if warehouse exist
   knex("warehouses")
     .select("id")
     .where("id", warehouseId)
     .then((warehouse) => {
+      //handling if warehouse exist or not
       if (warehouse.length === 0) {
         res.status(404).json({ error: "Warehouse not found" });
       } else {
+        //fetching inventories for the warehouse
         knex("inventories")
           .select("id", "item_name", "category", "status", "quantity")
           .where("warehouse_id", warehouseId)
@@ -112,6 +118,53 @@ router.get("/:id/inventories", (req, res) => {
     });
 });
 
+//POST or create a new warehouse
+router.post("/", validateWarehouseInput, validateMiddleware, (req, res) => {
+  //retrive data
+  const {
+    warehouse_name,
+    address,
+    city,
+    country,
+    contact_name,
+    contact_position,
+    contact_phone,
+    contact_email,
+  } = req.body;
+  //add new warehouse data
+  knex("warehouses")
+  .insert({
+    warehouse_name,
+    address,
+    city,
+    country,
+    contact_name,
+    contact_position,
+    contact_phone,
+    contact_email,
+  })
+  .returning(
+    warehouse_name,
+    address,
+    city,
+    country,
+    contact_name,
+    contact_position,
+    contact_phone,
+    contact_email,
+  )
+  .then((newWarehouse) => {
+    const createdWarehouse = newWarehouse[0]
+    res.status(201).json(createdWarehouse);
+  })
+  .catch((error) => {
+    console.error(error);
+    res.status(500).json({ error: "Something went wrong. Please try again later" });
+  })
+})
+
+
+//DELETE a warehouse
 router.delete("/:deleteID", (req, res) => {
   // this deletes selected warehouse by warehouse ID
   // (also delets associated inventories that references that
