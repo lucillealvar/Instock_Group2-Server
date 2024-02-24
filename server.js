@@ -19,7 +19,7 @@ app.use(express.json());
 
 //routes
 app.use("/inventory", inventoryRoute);
-app.use("/warehouse", warehouseRoute);
+app.use("/api/warehouses", warehouseRoute);
 
 //-------------------------------
 //test connetion routes

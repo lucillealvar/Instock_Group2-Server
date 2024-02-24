@@ -1,12 +1,12 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const knex = require('knex');
+const knex = require("knex")(require("../../knexfile"));
 
-router.get('/warehouse', (req, res) => {
-    res.send('List of warehouse');
-})
+router.get("/", (req, res) => {
+  res.send("List of warehouse");
+});
 
-router.put("/api/warehouses/:id", async (req, res) => {
+router.put("/:id", async (req, res) => {
   const { id } = req.params;
   const {
     warehouse_name,
@@ -32,7 +32,7 @@ router.put("/api/warehouses/:id", async (req, res) => {
     return res.status(400).json({ message: "All fields are required" });
   }
 
-  const phoneRegex = /^(\([0-9]{3}\)\s*|[0-9]{3}\-)[0-9]{3}-[0-9]{4}$/;
+  const phoneRegex = /^\+\d{1,3}\s\(\d{3}\)\s\d{3}-\d{4}$/;
   const emailRegex =
     /^[-!#$%&'*+\/0-9=?A-Z^_a-z{|}~](\.?[-!#$%&'*+\/0-9=?A-Z^_a-z`{|}~])*@[a-zA-Z0-9](-*\.?[a-zA-Z0-9])*\.[a-zA-Z](-?[a-zA-Z0-9])+$/;
   if (!phoneRegex.test(contact_phone)) {
