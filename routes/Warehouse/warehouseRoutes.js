@@ -113,18 +113,32 @@ router.get("/:id/inventories", (req, res) => {
 });
 
 router.delete("/:deleteID", (req, res) => {
+  // this deletes
   let deleteID = req.params.deleteID;
   // res.send(`we are deleting warehouse: ${deleteID} `);
 
-  knex
-    .from("warehouses")
-    .where("warehouses.id", deleteID)
-    .del()
-    .then((data) => {
-      res.status(204).json("warehouse successfully deleted");
-    })
-    .catch((data) => {
-      res.status(404).send("warehouse ID not found");
+  knex("warehouses")
+    .where("id", deleteID)
+    .select("id")
+    .then((rows) => {
+      console.log(rows.length);
+      if (rows.length === 0) {
+        res.status(404).send(`Warehouse ${deleteID} not found`);
+      } else {
+        knex
+          .from("warehouses")
+          .where("warehouses.id", deleteID)
+          // .returning("*")
+          .del()
+          .then((data) => {
+            res.status(204).send("deleted");
+            // FIXME: idk why the message is not going through,
+            // besides that it works...
+          })
+          .catch((e) => {
+            res.status(404).send(e);
+          });
+      }
     });
 });
 
