@@ -29,10 +29,8 @@ router.get("/", (req, res) => {
 
 // GET inventories by warehouse ID
 router.get("/:id/inventories", (req, res) => {
-  const warehouseId = req.params.id;
   knex("warehouses")
     .select("id")
-    .where("id", warehouseId)
     .then((warehouse) => {
       if (warehouse.length === 0) {
         res.status(404).json({ error: "Warehouse not found" });
@@ -45,7 +43,6 @@ router.get("/:id/inventories", (req, res) => {
             "status",
             "quantity"
           )
-          .where("warehouse_id", warehouseId)
           .then((inventories) => {
             res.status(200).json(inventories);
           })
