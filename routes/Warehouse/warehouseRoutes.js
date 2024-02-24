@@ -113,9 +113,10 @@ router.get("/:id/inventories", (req, res) => {
 });
 
 router.delete("/:deleteID", (req, res) => {
-  // this deletes
+  // this deletes selected warehouse by warehouse ID
+  // (also delets associated inventories that references that
+  // warehouse's ID ==> already implement from schema)
   let deleteID = req.params.deleteID;
-  // res.send(`we are deleting warehouse: ${deleteID} `);
 
   knex("warehouses")
     .where("id", deleteID)
@@ -128,12 +129,12 @@ router.delete("/:deleteID", (req, res) => {
         knex
           .from("warehouses")
           .where("warehouses.id", deleteID)
-          // .returning("*")
+          // .returning()
           .del()
           .then((data) => {
             res.status(204).send("deleted");
             // FIXME: idk why the message is not going through,
-            // besides that it works...
+            // besides that it, all works...
           })
           .catch((e) => {
             res.status(404).send(e);
