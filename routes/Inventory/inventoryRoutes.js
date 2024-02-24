@@ -45,7 +45,27 @@ router.get("/", (req, res) => {
 router.get("/:intventoyid", (req, res) => {
   let selectid = req.params.intventoyid;
   console.log(selectid);
-  res.send(selectid);
+  // res.send(selectid);
+
+  knex
+    .select(
+      "inventories.id",
+      "warehouses.warehouse_name",
+      "inventories.item_name",
+      "inventories.description",
+      "inventories.category",
+      "inventories.status",
+      "inventories.quantity"
+    )
+    .from("inventories")
+    .join("warehouses", "inventories.warehouse_id", "warehouses.id")
+    .where("inventories.id", selectid)
+    .then((data) => {
+      res.status(200).json(data);
+    })
+    .catch((error) => {
+      res.status(404).send("ID is not found");
+    });
 });
 
 module.exports = router;
