@@ -29,7 +29,10 @@ router.get("/", (req, res) => {
 
 router.delete("/:deleteID", (req, res) => {
   let deleteID = req.params.deleteID;
-  res.send(`we are deleting ${deleteID} warehouse`);
+  res.send(`we are deleting warehouse: ${deleteID} `);
+  // res.status(204).send("warehouse successfully deleted");
+
+  // res.status(404).send("warehouse ID not found");
 });
 
 module.exports = router;

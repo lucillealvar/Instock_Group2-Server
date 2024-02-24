@@ -26,9 +26,9 @@ router.get("/", (req, res) => {
     });
 });
 
-router.get("/:intventoyid", (req, res) => {
+router.get("/:inventoryid", (req, res) => {
   // return specific objects based on inventories.id
-  let selectid = req.params.intventoyid;
+  let selectid = req.params.inventoryid;
   console.log(selectid);
 
   knex
