@@ -7,12 +7,12 @@ router.get("/", (req, res) => {
   res.send("@ inventory default route");
 });
 
-router.get("/", (req, res) => {
+router.get("/simplyall", (req, res) => {
   // returns all Inventory objects, unfiltered
   knex("inventories")
     .select("*")
     .then((data) => {
-      resres.status(200).json(data);
+      res.status(200).json(data);
     })
     .catch((error) => {
       res.status(500).send("na-da");
