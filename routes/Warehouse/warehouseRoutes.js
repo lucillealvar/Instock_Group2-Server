@@ -2,8 +2,8 @@ const express = require("express");
 const router = express.Router();
 const knex = require("knex")(require("../../knexfile"));
 
-router.get("/", (req, res) => {
   // GET all warehouses (except timestamps)
+router.get("/", (req, res) => {
   knex("warehouses")
     .select(
       "id",
