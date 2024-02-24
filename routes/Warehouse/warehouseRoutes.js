@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const knex = require("knex")(require("../../knexfile"));
 
-  // GET all warehouses (except timestamps)
+// GET all warehouses (except timestamps)
 router.get("/", (req, res) => {
   knex("warehouses")
     .select(
@@ -97,13 +97,7 @@ router.get("/:id/inventories", (req, res) => {
         res.status(404).json({ error: "Warehouse not found" });
       } else {
         knex("inventories")
-          .select(
-            "id",
-            "item_name",
-            "category",
-            "status",
-            "quantity"
-          )
+          .select("id", "item_name", "category", "status", "quantity")
           .where("warehouse_id", warehouseId)
           .then((inventories) => {
             res.status(200).json(inventories);
@@ -118,5 +112,35 @@ router.get("/:id/inventories", (req, res) => {
     });
 });
 
-module.exports = router;
+router.delete("/:deleteID", (req, res) => {
+  // this deletes selected warehouse by warehouse ID
+  // (also delets associated inventories that references that
+  // warehouse's ID ==> already implement from schema)
+  let deleteID = req.params.deleteID;
 
+  knex("warehouses")
+    .where("id", deleteID)
+    .select("id")
+    .then((rows) => {
+      console.log(rows.length);
+      if (rows.length === 0) {
+        res.status(404).send(`Warehouse ${deleteID} not found`);
+      } else {
+        knex
+          .from("warehouses")
+          .where("warehouses.id", deleteID)
+          // .returning()
+          .del()
+          .then((data) => {
+            res.status(204).send("deleted");
+            // FIXME: idk why the message is not going through,
+            // besides that it, all works...
+          })
+          .catch((e) => {
+            res.status(404).send(e);
+          });
+      }
+    });
+});
+
+module.exports = router;
