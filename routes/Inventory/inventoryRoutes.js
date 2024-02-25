@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const { body, validationResult } = require("express-validator");
 
 const knex = require("knex")(require("../../knexfile"));
 
@@ -107,7 +108,20 @@ router.put("/:id", async (req, res) => {
     console.error(error);
     res.status(500).json({ error: "Internal server error" });
   }
+
 });
 
+const validate = [
+  body("warehouse_id").isInt(),
+  body("item_name").notEmpty(),
+  body("description").notEmpty(),
+  body("category").notEmpty(),
+  body("status").notEmpty(),
+  body("quantity").isInt(),
+];
+
+router.post("/", validate, (req, res) => {
+
+});
 
 module.exports = router;
