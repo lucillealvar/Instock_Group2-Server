@@ -2,23 +2,23 @@ const { body, validationResult } = require("express-validator");
 
 //Validate for warehouse input fields
 const validateWarehouseInput = [
-  body("warehouse_name").noEmpty().withMessage("Warehouse name is required"),
-  body("address").noEmpty().withMessage("Address is required"),
-  body("city").noEmpty().withMessage("City is required"),
-  body("country").noEmpty().withMessage("Country is required"),
-  body("contact_name").noEmpty().withMessage("Contact name is required"),
+  body("warehouse_name").notEmpty().withMessage("Warehouse name is required"),
+  body("address").notEmpty().withMessage("Address is required"),
+  body("city").notEmpty().withMessage("City is required"),
+  body("country").notEmpty().withMessage("Country is required"),
+  body("contact_name").notEmpty().withMessage("Contact name is required"),
   body("contact_position")
-    .noEmpty()
+    .notEmpty()
     .withMessage("Contact position is required"),
   //Validate phone number
   body("contact_phone")
-    .noEmpty()
+    .notEmpty()
     .withMessage("Contact phone is required")
     .isMobilePhone(undefined, { strictMode: false }) //method to check if input is valid phone #
     .withMessage("Invalid phone number"),
   //Validate email address
   body("contact_email")
-    .noEmpty()
+    .notEmpty()
     .withMessage("Contact Email is required")
     .isEmail()
     .withMessage("Invalid email address"),

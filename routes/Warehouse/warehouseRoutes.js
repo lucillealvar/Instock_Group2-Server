@@ -143,25 +143,31 @@ router.post("/", validateWarehouseInput, validateMiddleware, (req, res) => {
     contact_phone,
     contact_email,
   })
-  .returning(
-    warehouse_name,
-    address,
-    city,
-    country,
-    contact_name,
-    contact_position,
-    contact_phone,
-    contact_email,
-  )
-  .then((newWarehouse) => {
-    const createdWarehouse = newWarehouse[0]
+  .then(() => {
+    //returns the new added data
+    return knex("warehouses")
+    .where({ warehouse_name })
+    .select(
+      "id",
+      "warehouse_name",
+      "address",
+      "city",
+      "country",
+      "contact_name",
+      "contact_position",
+      "contact_phone",
+      "contact_email"
+    );
+  })
+  .then((insertedData) => {
+    const createdWarehouse = insertedData[0];
     res.status(201).json(createdWarehouse);
   })
   .catch((error) => {
     console.error(error);
-    res.status(500).json({ error: "Something went wrong. Please try again later" });
-  })
-})
+    res.status(500).json({ error: "Something went wrong. Please try again later. "});
+  });
+});
 
 
 //DELETE a warehouse
