@@ -111,6 +111,7 @@ router.put("/:id", async (req, res) => {
 
 });
 
+//Define validation rules
 const validate = [
   body("warehouse_id").isInt(),
   body("item_name").notEmpty(),
@@ -120,8 +121,45 @@ const validate = [
   body("quantity").isInt(),
 ];
 
-router.post("/", validate, (req, res) => {
+router.post("/", validate, async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors });
+    }
 
+    const { warehouse_id, item_name, description, category, status, quantity } =
+      req.body;
+
+    // Check if warehouse_id exists in warehouses table
+    const warehouseExists = await knex("warehouses")
+      .where("id", warehouse_id)
+      .first();
+    if (!warehouseExists) {
+      return res.status(400).json({ error: "Warehouse ID does not exist" });
+    }
+
+    // Insert new inventory item
+    const [newInventoryId] = await knex("inventories").insert({
+      warehouse_id,
+      item_name,
+      description,
+      category,
+      status,
+      quantity,
+    });
+
+    // Fetch the newly created inventory item
+    const newInventory = await knex("inventories")
+      .where("id", newInventoryId)
+      .first();
+
+    // Return the newly created inventory item
+    res.status(201).json(newInventory);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
 module.exports = router;
