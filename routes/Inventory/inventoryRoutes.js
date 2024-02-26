@@ -52,7 +52,6 @@ router.get("/:inventoryid", (req, res) => {
     });
 });
 
-
 router.put("/:id", async (req, res) => {
   try {
     const inventoryId = req.params.id;
@@ -109,5 +108,25 @@ router.put("/:id", async (req, res) => {
   }
 });
 
+//Delete an inventory item
+router.delete("/:id", (req, res) => {
+  const inventoryId = req.params.id;
+  knex("inventories")
+    .where("id", inventoryId)
+    .del()
+    .then((deleted) => {
+      if (deleted === 0) {
+        res.status(404).json({ error: "Inventory item not found "});
+      } else {
+        res.status(204).send();
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+      res
+        .status(500)
+        .json({ error: "Something went wrong. Please try again later" });
+    });
+});
 
 module.exports = router;
