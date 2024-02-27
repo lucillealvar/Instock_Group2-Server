@@ -245,7 +245,20 @@ router.get("/names", (req, res) => {
     .select("warehouse_name")
     .from("warehouses")
     .distinct()
-    .then((data) => res.send(data));
+    .then((data) => {
+      // console.log(data);
+      let array = data;
+      let finalpackage = [];
+
+      array.forEach((element) => {
+        let name = element.warehouse_name;
+        finalpackage.push(name);
+      });
+
+      // console.log(finalpackage);
+
+      res.json(finalpackage);
+    });
 });
 
 module.exports = router;
