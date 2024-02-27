@@ -50,13 +50,11 @@ app.get("/api/:table/list/specific/:keyword", (req, res) => {
   let tablekeyword = req.params.table;
   let keyword = req.params.keyword;
 
-  // res.send("sdfsf");
   knex
     .select(keyword)
     .from(tablekeyword)
     .distinct()
     .then((data) => {
-      // console.log(data);
       let array = data;
       let finalpackage = [];
 
@@ -64,8 +62,6 @@ app.get("/api/:table/list/specific/:keyword", (req, res) => {
         let name = element[keyword];
         finalpackage.push(name);
       });
-
-      // console.log(finalpackage);
 
       res.json(finalpackage);
     });
