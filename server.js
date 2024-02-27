@@ -44,6 +44,8 @@ app.get("/test2/:status", (req, res) => {
     .catch((error) => res.status(500).send("na-da!!!"));
 });
 
+//  dynamically Lookup a specific (distinct) values in a given column
+//  for a given table
 app.get("/api/:table/list/specific/:keyword", (req, res) => {
   let tablekeyword = req.params.table;
   let keyword = req.params.keyword;

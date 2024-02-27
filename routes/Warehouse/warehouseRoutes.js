@@ -239,14 +239,13 @@ router.delete("/:deleteID", (req, res) => {
     */
 });
 
+// Lookup a specific (distinct) values in a given column
 router.get("/list/name", (req, res) => {
-  // res.send("sdfsf");
   knex
     .select("warehouse_name")
     .from("warehouses")
     .distinct()
     .then((data) => {
-      // console.log(data);
       let array = data;
       let finalpackage = [];
 
@@ -255,33 +254,8 @@ router.get("/list/name", (req, res) => {
         finalpackage.push(name);
       });
 
-      // console.log(finalpackage);
-
       res.json(finalpackage);
     });
 });
-
-// router.get("/list/specific/:keyword", (req, res) => {
-//   let keyword = req.params.keyword;
-//   // res.send("sdfsf");
-//   knex
-//     .select(keyword)
-//     .from("warehouses")
-//     .distinct()
-//     .then((data) => {
-//       // console.log(data);
-//       let array = data;
-//       let finalpackage = [];
-
-//       array.forEach((element) => {
-//         let name = element[keyword];
-//         finalpackage.push(name);
-//       });
-
-//       // console.log(finalpackage);
-
-//       res.json(finalpackage);
-//     });
-// });
 
 module.exports = router;
