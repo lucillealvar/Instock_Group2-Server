@@ -43,6 +43,32 @@ app.get("/test2/:status", (req, res) => {
     .then((data) => res.json(data))
     .catch((error) => res.status(500).send("na-da!!!"));
 });
+
+app.get("/api/:table/list/specific/:keyword", (req, res) => {
+  let tablekeyword = req.params.table;
+  let keyword = req.params.keyword;
+
+  // res.send("sdfsf");
+  knex
+    .select(keyword)
+    .from(tablekeyword)
+    .distinct()
+    .then((data) => {
+      // console.log(data);
+      let array = data;
+      let finalpackage = [];
+
+      array.forEach((element) => {
+        let name = element[keyword];
+        finalpackage.push(name);
+      });
+
+      // console.log(finalpackage);
+
+      res.json(finalpackage);
+    });
+});
+
 //-------------------------------
 
 app.listen(PORT, () => {
