@@ -135,10 +135,6 @@ router.delete("/:id", (req, res) => {
 });
 
 router.get("/list/name", (req, res) => {
-  let text = req.params.name;
-  console.log(text);
-  res.send("sdfsdf");
-
   knex
     .select("category")
     .from("inventories")

@@ -239,7 +239,7 @@ router.delete("/:deleteID", (req, res) => {
     */
 });
 
-router.get("/names", (req, res) => {
+router.get("/list/name", (req, res) => {
   // res.send("sdfsf");
   knex
     .select("warehouse_name")
