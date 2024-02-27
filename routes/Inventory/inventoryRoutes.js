@@ -30,26 +30,31 @@ router.get("/:inventoryid", (req, res) => {
   // return specific objects based on inventories.id
   let selectid = req.params.inventoryid;
   console.log(selectid);
-
-  knex
-    .select(
-      "inventories.id",
-      "warehouses.warehouse_name",
-      "inventories.item_name",
-      "inventories.description",
-      "inventories.category",
-      "inventories.status",
-      "inventories.quantity"
-    )
-    .from("inventories")
-    .join("warehouses", "inventories.warehouse_id", "warehouses.id")
-    .where("inventories.id", selectid)
-    .then((data) => {
-      res.status(200).json(data);
-    })
-    .catch((error) => {
-      res.status(404).send("ID is not found");
-    });
+  if (Number.isInteger(selectid)) {
+    console.log("is a number");
+    knex
+      .select(
+        "inventories.id",
+        "warehouses.warehouse_name",
+        "inventories.item_name",
+        "inventories.description",
+        "inventories.category",
+        "inventories.status",
+        "inventories.quantity"
+      )
+      .from("inventories")
+      .join("warehouses", "inventories.warehouse_id", "warehouses.id")
+      .where("inventories.id", selectid)
+      .then((data) => {
+        res.status(200).json(data);
+      })
+      .catch((error) => {
+        res.status(404).send("ID is not found");
+      });
+  } else {
+    console.log("not a number");
+    res.status(404).send("ID is not found");
+  }
 });
 
 router.put("/:id", async (req, res) => {
@@ -116,7 +121,7 @@ router.delete("/:id", (req, res) => {
     .del()
     .then((deleted) => {
       if (deleted === 0) {
-        res.status(404).json({ error: "Inventory item not found "});
+        res.status(404).json({ error: "Inventory item not found " });
       } else {
         res.status(204).send();
       }
@@ -126,6 +131,27 @@ router.delete("/:id", (req, res) => {
       res
         .status(500)
         .json({ error: "Something went wrong. Please try again later" });
+    });
+});
+
+router.get("/list/name", (req, res) => {
+  knex
+    .select("category")
+    .from("inventories")
+    .distinct()
+    .then((data) => {
+      console.log(data);
+      let array = data;
+      let finalpackage = [];
+
+      array.forEach((element) => {
+        let name = element.category;
+        finalpackage.push(name);
+      });
+
+      console.log(finalpackage);
+
+      res.json(finalpackage);
     });
 });
 
