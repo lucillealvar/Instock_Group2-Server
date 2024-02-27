@@ -239,4 +239,13 @@ router.delete("/:deleteID", (req, res) => {
     */
 });
 
+router.get("/names", (req, res) => {
+  // res.send("sdfsf");
+  knex
+    .select("warehouse_name")
+    .from("warehouses")
+    .distinct()
+    .then((data) => res.send(data));
+});
+
 module.exports = router;
