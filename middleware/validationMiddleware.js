@@ -25,7 +25,7 @@ const validateWarehouseInput = [
 ];
 
 //Validate for new item input fields
-const validateNewItemInput = [
+const validateItemInput = [
   body("warehouse_id").notEmpty().withMessage("Warehouse id is required"),
   body("item_name").notEmpty().withMessage("Item name is required"),
   body("description").notEmpty().withMessage("Item description is required"),
@@ -45,4 +45,8 @@ const validateMiddleware = (req, res, next) => {
   next();
 };
 
-module.exports = { validateWarehouseInput, validateNewItemInput, validateMiddleware };
+module.exports = {
+  validateWarehouseInput,
+  validateItemInput,
+  validateMiddleware,
+};
