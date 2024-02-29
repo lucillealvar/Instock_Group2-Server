@@ -1,5 +1,9 @@
 const express = require("express");
 const router = express.Router();
+const {
+  validateNewItemInput,
+  validateMiddleware,
+} = require("../../middleware/validationMiddleware");
 
 const knex = require("knex")(require("../../knexfile"));
 
@@ -26,6 +30,42 @@ router.get("/", (req, res) => {
     });
 });
 
+router.post("/", validateNewItemInput, validateMiddleware, async (req, res) => {
+  try {
+    const { warehouse_id, item_name, description, category, status, quantity } =
+      req.body;
+
+    // Check if warehouse_id exists in warehouses table
+    const warehouseExists = await knex("warehouses")
+      .where("id", warehouse_id)
+      .first();
+    if (!warehouseExists) {
+      return res.status(400).json({ error: "Warehouse ID does not exist" });
+    }
+
+    // Insert new inventory item
+    const [newInventoryId] = await knex("inventories").insert({
+      warehouse_id,
+      item_name,
+      description,
+      category,
+      status,
+      quantity,
+    });
+
+    // Fetch the newly created inventory item
+    const newInventory = await knex("inventories")
+      .where("id", newInventoryId)
+      .first();
+
+    // Return the newly created inventory item
+    res.status(201).json(newInventory);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 router.get("/:inventoryid", (req, res) => {
   // return specific objects based on inventories.id
   let selectid = req.params.inventoryid;
@@ -35,6 +75,7 @@ router.get("/:inventoryid", (req, res) => {
     knex
       .select(
         "inventories.id",
+        "warehouses.warehouse_id",
         "warehouses.warehouse_name",
         "inventories.item_name",
         "inventories.description",
