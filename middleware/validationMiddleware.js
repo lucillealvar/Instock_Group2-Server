@@ -24,6 +24,16 @@ const validateWarehouseInput = [
     .withMessage("Invalid email address"),
 ];
 
+//Validate for new item input fields
+const validateNewItemInput = [
+  body("warehouse_id").notEmpty().withMessage("Warehouse id is required"),
+  body("item_name").notEmpty().withMessage("Item name is required"),
+  body("description").notEmpty().withMessage("Item description is required"),
+  body("category").notEmpty().withMessage("Category is required"),
+  body("status").notEmpty().withMessage("Status is required"),
+  body("quantity").notEmpty().withMessage("Quantity is required"),
+];
+
 //Check validation results
 const validateMiddleware = (req, res, next) => {
   const errors = validationResult(req);
@@ -35,4 +45,4 @@ const validateMiddleware = (req, res, next) => {
   next();
 };
 
-module.exports = { validateWarehouseInput, validateMiddleware };
+module.exports = { validateWarehouseInput, validateNewItemInput, validateMiddleware };
