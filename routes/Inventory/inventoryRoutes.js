@@ -27,9 +27,10 @@ router.get("/", (req, res) => {
 });
 
 router.get("/:inventoryid", (req, res) => {
-  // return specific objects based on inventories.id
-  let selectid = req.params.inventoryid;
+  // return specific objects bassed on inventories.id
+  let selectid = Number(req.params.inventoryid);
   console.log(selectid);
+  // res.send(typeof selectid);
   if (Number.isInteger(selectid)) {
     console.log("is a number");
     knex
