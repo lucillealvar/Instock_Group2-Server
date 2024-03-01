@@ -70,32 +70,33 @@ router.get("/:inventoryid", (req, res) => {
   // return specific objects based on inventories.id
   let selectid = req.params.inventoryid;
   console.log(selectid);
-  if (Number.isInteger(selectid)) {
-    console.log("is a number");
-    knex
-      .select(
-        "inventories.id",
-        "warehouses.warehouse_id",
-        "warehouses.warehouse_name",
-        "inventories.item_name",
-        "inventories.description",
-        "inventories.category",
-        "inventories.status",
-        "inventories.quantity"
-      )
-      .from("inventories")
-      .join("warehouses", "inventories.warehouse_id", "warehouses.id")
-      .where("inventories.id", selectid)
-      .then((data) => {
-        res.status(200).json(data);
-      })
-      .catch((error) => {
-        res.status(404).send("ID is not found");
-      });
-  } else {
-    console.log("not a number");
-    res.status(404).send("ID is not found");
-  }
+  // if (Number.isInteger(selectid)) {
+  //   console.log("is a number");
+  knex
+    .select(
+      "inventories.id",
+      "inventories.warehouse_id",
+      "warehouses.warehouse_name",
+      "inventories.item_name",
+      "inventories.description",
+      "inventories.category",
+      "inventories.status",
+      "inventories.quantity"
+    )
+    .from("inventories")
+    .join("warehouses", "inventories.warehouse_id", "warehouses.id")
+    .where("inventories.id", selectid)
+    .then((data) => {
+      res.status(200).json(data);
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(404).send("ID is not found");
+    });
+  // } else {
+  //   console.log("not a number");
+  //   res.status(404).send("ID is not found");
+  // }
 });
 
 router.put("/:id", validateItemInput, validateMiddleware, async (req, res) => {
