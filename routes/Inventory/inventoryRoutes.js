@@ -76,6 +76,7 @@ router.get("/:inventoryid", (req, res) => {
     knex
       .select(
         "inventories.id",
+        "inventories.warehouse_id",
         "warehouses.warehouse_name",
         "inventories.item_name",
         "inventories.description",
@@ -96,7 +97,6 @@ router.get("/:inventoryid", (req, res) => {
     console.log("not a number");
     res.status(404).send("ID is not found");
   }
-
 });
 
 router.put("/:id", validateItemInput, validateMiddleware, async (req, res) => {
