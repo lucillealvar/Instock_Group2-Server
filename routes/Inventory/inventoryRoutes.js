@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const {
-  validateNewItemInput,
+  validateItemInput,
   validateMiddleware,
 } = require("../../middleware/validationMiddleware");
 
@@ -30,7 +30,7 @@ router.get("/", (req, res) => {
     });
 });
 
-router.post("/", validateNewItemInput, validateMiddleware, async (req, res) => {
+router.post("/", validateItemInput, validateMiddleware, async (req, res) => {
   try {
     const { warehouse_id, item_name, description, category, status, quantity } =
       req.body;
@@ -70,53 +70,40 @@ router.get("/:inventoryid", (req, res) => {
   // return specific objects based on inventories.id
   let selectid = req.params.inventoryid;
   console.log(selectid);
-  if (Number.isInteger(selectid)) {
-    console.log("is a number");
-    knex
-      .select(
-        "inventories.id",
-        "warehouses.warehouse_id",
-        "warehouses.warehouse_name",
-        "inventories.item_name",
-        "inventories.description",
-        "inventories.category",
-        "inventories.status",
-        "inventories.quantity"
-      )
-      .from("inventories")
-      .join("warehouses", "inventories.warehouse_id", "warehouses.id")
-      .where("inventories.id", selectid)
-      .then((data) => {
-        res.status(200).json(data);
-      })
-      .catch((error) => {
-        res.status(404).send("ID is not found");
-      });
-  } else {
-    console.log("not a number");
-    res.status(404).send("ID is not found");
-  }
+  // if (Number.isInteger(selectid)) {
+  //   console.log("is a number");
+  knex
+    .select(
+      "inventories.id",
+      "inventories.warehouse_id",
+      "warehouses.warehouse_name",
+      "inventories.item_name",
+      "inventories.description",
+      "inventories.category",
+      "inventories.status",
+      "inventories.quantity"
+    )
+    .from("inventories")
+    .join("warehouses", "inventories.warehouse_id", "warehouses.id")
+    .where("inventories.id", selectid)
+    .then((data) => {
+      res.status(200).json(data);
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(404).send("ID is not found");
+    });
+  // } else {
+  //   console.log("not a number");
+  //   res.status(404).send("ID is not found");
+  // }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", validateItemInput, validateMiddleware, async (req, res) => {
   try {
     const inventoryId = req.params.id;
     const { warehouse_id, item_name, description, category, status, quantity } =
       req.body;
-
-    // Check if all required properties exist
-    if (
-      !warehouse_id ||
-      !item_name ||
-      !description ||
-      !category ||
-      !status ||
-      !quantity
-    ) {
-      return res
-        .status(400)
-        .json({ error: "Missing properties in the request body" });
-    }
 
     // Check if warehouse_id exists in warehouses table
     const warehouseExists = await knex("warehouses")
