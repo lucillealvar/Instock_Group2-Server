@@ -239,14 +239,13 @@ router.delete("/:deleteID", (req, res) => {
     */
 });
 
+// Lookup a specific (distinct) values in a given column
 router.get("/list/name", (req, res) => {
-  // res.send("sdfsf");
   knex
     .select("warehouse_name")
     .from("warehouses")
     .distinct()
     .then((data) => {
-      // console.log(data);
       let array = data;
       let finalpackage = [];
 
@@ -254,8 +253,6 @@ router.get("/list/name", (req, res) => {
         let name = element.warehouse_name;
         finalpackage.push(name);
       });
-
-      // console.log(finalpackage);
 
       res.json(finalpackage);
     });
