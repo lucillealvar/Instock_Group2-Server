@@ -31,6 +31,34 @@ router.get("/", (req, res) => {
     });
 });
 
+//GET single warehouse 
+router.get("/:id/details", (req, res) => {
+  //retrieve warehouse ID from request parameters
+  const warehouseId = req.params.id;
+  knex("warehouses")
+    .select(
+      "id",
+      "warehouse_name",
+      "address",
+      "city",
+      "country",
+      "contact_name",
+      "contact_position",
+      "contact_phone",
+      "contact_email"
+    )
+    .where("id", warehouseId)
+    .then((warehouses) => {
+      res.status(200).json(warehouses);
+    })
+    .catch((error) => {
+      console.error(error);
+      res
+        .status(500)
+        .json({ error: "Something went wrong. Please try again later" });
+    });
+});
+
 //PUT or EDIT a warehouse
 router.put("/:id", async (req, res) => {
   const { id } = req.params;
