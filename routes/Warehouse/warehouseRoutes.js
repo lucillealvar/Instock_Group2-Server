@@ -32,9 +32,10 @@ router.get("/", (req, res) => {
 });
 
 //GET single warehouse 
-router.get("/:id/details", (req, res) => {
+router.get("/:warehouseid", (req, res) => {
   //retrieve warehouse ID from request parameters
-  const warehouseId = req.params.id;
+  const warehouseId = req.params.warehouseid;
+  console.log(warehouseId);
   knex("warehouses")
     .select(
       "id",
