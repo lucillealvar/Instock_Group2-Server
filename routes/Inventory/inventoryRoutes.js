@@ -61,6 +61,7 @@ router.get("/:inventoryid", (req, res) => {
   // return specific objects based on inventories.id
   let selectid = req.params.inventoryid;
   console.log(selectid);
+})
 
 router.post("/", validateItemInput, validateMiddleware, async (req, res) => {
   try {
