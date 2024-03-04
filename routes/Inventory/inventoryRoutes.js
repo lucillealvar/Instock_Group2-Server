@@ -30,39 +30,6 @@ router.get("/", (req, res) => {
     });
 });
 
-
-router.get("/:warehouseid", (req, res) => {
-  // return all Inventory objects for a specific warehouse
-  // with warehouses.warehouse_name
-  let selectid = req.params.warehouseid;
-  console.log(selectid)
-  knex
-    .select(
-      "inventories.id",
-      "inventories.warehouse_id",
-      "inventories.item_name",
-      "inventories.description",
-      "inventories.category",
-      "inventories.status",
-      "inventories.quantity"
-    )
-    .from("inventories")
-    .where("warehouse_id", selectid)
-    .then((data) => {
-      res.status(200).json(data);
-    })
-    .catch((error) => {
-      res.status(500).send("na-da");
-    });
-});
-
-
-router.get("/:inventoryid", (req, res) => {
-  // return specific objects based on inventories.id
-  let selectid = req.params.inventoryid;
-  console.log(selectid);
-})
-
 router.post("/", validateItemInput, validateMiddleware, async (req, res) => {
   try {
     const { warehouse_id, item_name, description, category, status, quantity } =
