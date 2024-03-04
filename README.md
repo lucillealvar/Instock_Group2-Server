@@ -1,4 +1,4 @@
-#Instock_Group2-Server
+# Instock_Group2-Server
 
 Instock is an Inventory Management System. Its primary functions include tracking stock levels, maintaining a comprehensive list of warehouses, and providing detailed information about the items stored in each warehouse. Additionally, the system includes contact information for efficient communication related to inventory matters. 
 
@@ -31,7 +31,7 @@ To run tests, run the following command
   npm run server
   Used Postman to check routes
 ```
-## This Project was made by:
+## This Project was developed by:
 
 - Tony Sun
 - Wanessa Lopes
